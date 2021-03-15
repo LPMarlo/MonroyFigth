@@ -31,6 +31,10 @@ public class Const {
 	public static final char SUR='S';
 	public static final char ESTE='E';
 	public static final char OESTE='O';
-	
+
+	//OBJETOS EN TABLERO
+	public static final int NUM_GEMAS=8;
+	public static final int NUM_ROCAS=10;
+	public static final int NUM_POZOS=6;
 
 }
