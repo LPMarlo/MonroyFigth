@@ -1,7 +1,5 @@
 package MonroyFight;
 
-import MonroyFight.Personaje;
-
 public class Principal {
     public static void main(String[] args) {
         Personaje a = new Elfo();
