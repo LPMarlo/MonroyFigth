@@ -36,5 +36,5 @@ public class Const {
 	public static final int NUM_GEMAS=8;
 	public static final int NUM_ROCAS=10;
 	public static final int NUM_POZOS=6;
-
+	
 }

@@ -14,6 +14,8 @@ public abstract class Personaje {
 		this.magia = magia;
 		this.fuerza = fuerza;
 		this.velocidad = velocidad;
+		gemas = 0;
+		pociones = 0;
 	}
 	
 	//GETTERS
@@ -44,18 +46,6 @@ public abstract class Personaje {
 
 	protected void setPociones(int pociones) {
 		this.pociones = pociones;
-	}
-
-	protected void setMagia(int magia) {
-		this.magia = magia;
-	}
-
-	protected void setFuerza(int fuerza) {
-		this.fuerza = fuerza;
-	}
-
-	protected void setVida(int velocidad) {
-		this.velocidad = velocidad;
 	}
 
 	//TOSTRING
