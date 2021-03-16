@@ -1,6 +1,6 @@
 package MonroyFight;
 
-public abstract class Personaje {
+public abstract class Personaje extends Tablero {
 	
 	//ATRIBUTOS
 	private int gemas;
