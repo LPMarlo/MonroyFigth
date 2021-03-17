@@ -1,6 +1,6 @@
 package MonroyFight;
 
-public abstract class Personaje extends Tablero {
+public abstract class Personaje extends Elemento {
 	
 	//ATRIBUTOS
 	private int gemas;
@@ -10,7 +10,8 @@ public abstract class Personaje extends Tablero {
 	private int velocidad;
 	
 	//CONSTRUCTOR
-	public Personaje(int magia, int fuerza, int velocidad) {
+	public Personaje(char simbolo, int magia, int fuerza, int velocidad) {
+		super(simbolo);
 		this.magia = magia;
 		this.fuerza = fuerza;
 		this.velocidad = velocidad;

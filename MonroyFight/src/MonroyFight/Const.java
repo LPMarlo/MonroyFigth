@@ -36,10 +36,15 @@ public class Const {
 	public static final char GEMA='G';
 	public static final char ROCA='R';
 	public static final char DINERO='D';
+	public static final char POCION='P';
+	public static final char POZO='O';
+	
 
 	//NUMERO DE OBJETOS EN TABLERO
 	public static final int NUM_GEMAS=8;
 	public static final int NUM_ROCAS=10;
 	public static final int NUM_POZOS=6;
+	public static final int NUM_DINERO=5;
+	public static final int NUM_POCION=3;
 	
 }
