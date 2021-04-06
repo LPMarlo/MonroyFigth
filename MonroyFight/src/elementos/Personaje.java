@@ -1,4 +1,4 @@
-package MonroyFight;
+package elementos;
 
 public abstract class Personaje extends Elemento {
 	

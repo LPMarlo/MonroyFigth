@@ -1,4 +1,4 @@
-package MonroyFight;
+package elementos;
 
 public class JuegoException extends Exception {
 	
