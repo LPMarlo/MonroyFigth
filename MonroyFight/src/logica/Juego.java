@@ -71,17 +71,17 @@ public class Juego {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 10; i++) {
-            sb.append("-----------------------------------------\n");
+            sb.append("-------------------------------------------------------------\n");
             for (int j = 0; j < 10; j++) {
                 if (tablero[i][j] == null) {
-                    sb.append("|   ");
+                    sb.append("|     ");
                 } else {
-                    sb.append("| " + (tablero[i][j]).toString() + " ");
+                    sb.append("|  " + (tablero[i][j]).toString() + "  ");
                 }
             }
             sb.append("|\n");
         }
-        sb.append("-----------------------------------------");
+        sb.append("-------------------------------------------------------------");
 
         return sb.toString();
     }
@@ -134,11 +134,12 @@ public class Juego {
      * Cambio de turno.
      */
     public void proximoJugador() {
-        turnoJugador++;
-        if (turnoJugador>=jugadores.length) {
-            turnoJugador = 0;
-        }
-
+    	do {
+    		turnoJugador++;
+            if (turnoJugador>=jugadores.length) {
+                turnoJugador = 0;
+            }
+		} while (jugadores[turnoJugador]==null);
     }
 
     /**
@@ -152,42 +153,43 @@ public class Juego {
         boolean salir = false;
         String info = null;
         boolean mover = false;
-        boolean win = true;
+        int jugadorAAtacar = 0;
 
         for (int i = 0; i < this.alto && !salir; i++) {
             for (int j = 0; j < this.ancho && !salir; j++) {
-                if (tablero[i][j]==null){
-
-                }
-                else if (tablero[i][j].equals(jugadores[turnoJugador])) {
+                if (tablero[i][j]!=null && tablero[i][j].equals(jugadores[turnoJugador])) {
                     filaActual = i;
                     columnaActual = j;
-                    nextFila = i;
-                    nextColumna = j;
                     salir = true;
                 }
             }
         }
         
         if (direccion == ESTE) {
-          if (nextColumna < this.ancho-1) nextColumna = nextColumna+1;
+          if (columnaActual < this.ancho-1) nextColumna = columnaActual+1;
           else nextColumna = 0;
         }
         else if (direccion == OESTE) {
-            if (nextColumna > 0) nextColumna = nextColumna-1;
+            if (columnaActual > 0) nextColumna = columnaActual-1;
             else nextColumna = ancho-1;
         }
         else if (direccion == NORTE) {
-            if (nextFila > 0) nextFila = nextFila-1;
+            if (filaActual > 0) nextFila = filaActual-1;
             else nextFila = alto-1;
         }
         else if (direccion == SUR) {
-            if (nextFila < this.alto-1) nextFila = nextFila+1;
+            if (filaActual < this.alto-1) nextFila = filaActual+1;
             else nextFila = 0;
+        }
+        
+        for (int i = 0; i < jugadores.length; i++) {
+            if (jugadores[i]!=null && jugadores[i].equals(tablero[nextFila][nextColumna])) {
+            	jugadorAAtacar = i;
+			}
         }
 
         if (tablero[nextFila][nextColumna] == null) {
-            info = "Movimiento realizado";
+            info = "Movimiento realizado.";
             mover = true;
         }
         else if (tablero[nextFila][nextColumna] instanceof Gema) {
@@ -231,79 +233,57 @@ public class Juego {
         }
 
         //BATALLA
-        //else if (tablero[nextFila][nextColumna] instanceof Elfo) || (tablero[nextFila][nextColumna] instanceof Ogro) || (tablero[nextFila][nextColumna] instanceof Guerrero) || (tablero[(nextFila][nextColumna] instanceof Mago)) {
-        //else if (tablero[nextFila][nextColumna] instanceof Jugador) {
-        else {
+        else if(jugadores[jugadorAAtacar].equals(tablero[nextFila][nextColumna])) {
             Random a = new Random();
             int fa = a.nextInt(jugadores[turnoJugador].getFuerza())+1;
-
+            
             Random b = new Random();
-            int fb = b.nextInt(((Jugador) tablero[nextFila][nextColumna]).getFuerza())+1;
+            int fb = b.nextInt(jugadores[jugadorAAtacar].getFuerza())+1;
 
             if (fa>fb) {
-                if (((Jugador) tablero[nextFila][nextColumna]).getPociones()>0) {
-                    ((Jugador) tablero[nextFila][nextColumna]).removePocion();
+                if (jugadores[jugadorAAtacar].getPociones()>0) {
+                    jugadores[jugadorAAtacar].removePocion();
                     info = "El jugador " + tablero[nextFila][nextColumna].toString() + " ha utilizado una pocion.";
                 }
-                else if (((Jugador) tablero[nextFila][nextColumna]).getDinero()>0) {
-                    jugadores[turnoJugador].winDinero(((Jugador) tablero[nextFila][nextColumna]).getDinero());
-                    ((Jugador) tablero[nextFila][nextColumna]).loseDinero();
+                else if (jugadores[jugadorAAtacar].getDinero()>0) {
+                    jugadores[turnoJugador].winDinero(jugadores[jugadorAAtacar].getDinero());
+                    jugadores[jugadorAAtacar].loseDinero();
                 }
                 else {
-                    info = "El jugador " + tablero[nextFila][nextColumna].toString() + " ha sido eliminado.";
+                    info = "El jugador " + jugadores[jugadorAAtacar].toString() + " ha sido eliminado.";
+                    jugadores[jugadorAAtacar] = null;
+                    tablero[nextFila][nextColumna] = null;
                     mover = true;
                 }
-                for (int i = 0; i < jugadores.length; i++) {
-                    if (tablero[nextFila][nextColumna].equals(jugadores[i])) {
-                        jugadores[i] = null;
-                    }
-                }
-                //RESET JUGADORES
-                Jugador[] auxiliar = new Jugador[jugadores.length-1];
-                int contador=0;
-                for (int i = 0; i < jugadores.length; i++) {
-                    if (jugadores[i]!=null) {
-                        auxiliar[contador] = jugadores[i];
-                        contador++;
-                    }
-                }
             } else if (fb>fa) {
-                if (((Jugador) jugadores[turnoJugador]).getPociones()>0) {
+                if (jugadores[turnoJugador].getPociones()>0) {
                     ((Jugador) jugadores[turnoJugador]).removePocion();
                     info = "El jugador " + jugadores[turnoJugador].toString() + " ha utilizado una pocion.";
                 }
-                else if (((Jugador) jugadores[turnoJugador]).getDinero()>0) {
-                    ((Jugador) tablero[nextFila][nextColumna]).winDinero(((Jugador) jugadores[turnoJugador]).getDinero());
+                else if (jugadores[jugadorAAtacar].getDinero()>0) {
+                    jugadores[jugadorAAtacar].winDinero(((Jugador) jugadores[turnoJugador]).getDinero());
                     ((Jugador) jugadores[turnoJugador]).loseDinero();
                 }
                 else {
-                    info = "El jugador " + tablero[nextFila][nextColumna].toString() + " ha sido eliminado.";
-                    win = false;
+                    info = "El jugador " + jugadores[turnoJugador].toString() + " ha sido eliminado.";
+                    jugadores[turnoJugador] = null;
+                    tablero[filaActual][columnaActual] = null;
                 }
             }
-
+            int jugadoresEnTablero = 0;
+            for (int i = 0; i < jugadores.length; i++) {
+    			if (jugadores[i]!=null) {
+    				jugadoresEnTablero++;
+    			}
+    		}
+            if (jugadoresEnTablero<=1) {
+    			this.terminado = true;
+    		}
         }
         if (mover) {
             tablero[nextFila][nextColumna] = jugadores[turnoJugador];
             tablero[filaActual][columnaActual] = null;
-
         }
-        if (!win) {
-            jugadores[turnoJugador] = null;
-            tablero[filaActual][columnaActual] = null;
-            //RESET JUGADORES
-            Jugador[] auxiliar = new Jugador[jugadores.length-1];
-            int contador=0;
-            for (int i = 0; i < jugadores.length; i++) {
-                if (jugadores[i]!=null) {
-                    auxiliar[contador] = jugadores[i];
-                    contador++;
-                }
-            }
-        }
-        if (jugadores.length<2) terminado = true;
-
-
         return info;
     }
 
