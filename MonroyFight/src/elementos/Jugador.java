@@ -9,7 +9,7 @@ public abstract class Jugador extends Elemento {
     private int pociones;
     private int dinero;
 
-    //CaracterÃ­sticas de cada personaje.
+    //Características de cada personaje.
     private int velocidad;
     private int magia;
     private int fuerza;
@@ -85,18 +85,5 @@ public abstract class Jugador extends Elemento {
 
     public String toString() {
         return "" + super.toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Jugador jugador = (Jugador) o;
-        return gemas == jugador.gemas && pociones == jugador.pociones && dinero == jugador.dinero && velocidad == jugador.velocidad && magia == jugador.magia && fuerza == jugador.fuerza;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(gemas, pociones, dinero, velocidad, magia, fuerza);
     }
 }

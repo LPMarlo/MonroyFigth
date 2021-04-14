@@ -12,53 +12,54 @@ public class MainJuego {
     public static Scanner teclado = new Scanner(System.in);
 
     public static void main(String[] args) {
-
-        char direccion;
+    	
         try {
+        	
             Juego juego = crearJuego();
             System.out.println(juego);
+            System.out.println(juego.ordenJugadores());
             System.out.println(juego.datosJugadores());
 
             while (!juego.isTerminado()) {
+            	
                 int dado = juego.getNumeroMovimientosJugador();
-
                 System.out.println("Le toca al jugador " + juego.getJugadorTurno() + ". El dado saca " + dado + " movimientos.");
 
-                for (int i = 1; i <= dado && !juego.isTerminado(); i++) {
-
-                    direccion = solicitarMovimiento();
-                    System.out.println(juego.moverJugador(direccion));
-
+                for (int i = 1; i <= dado && !juego.isTerminado() && !juego.isDead(); i++) {
+                	
+                    System.out.println(juego.moverJugador(solicitarMovimiento()));
                     System.out.println(juego);
                     System.out.println(juego.datosJugadores());
-
-
+                    
                 }
+                
                 juego.proximoJugador();
             }
-
-            System.out.println("Juego terminado. El ganador es:" + juego.getGanador());
-
+            
+            System.out.println("Juego terminado. El ganador es: " + juego.getGanador());
         } catch (JuegoException e) {
             System.out.println(e.getMessage());
         }
-
     }
 
     private static char solicitarMovimiento() {
+    	
         char direccion;
+        
         do {
-            System.out.println("Indique a donde desea moverse: N: Norte, S: Sur, E: Este u O: Oeste");
+            System.out.println("Indique a donde desea moverse: N-Norte, S-Sur, E-Este u O-Oeste");
             direccion = teclado.nextLine().toUpperCase().charAt(0);
         } while (direccion != 'N' && direccion != 'S' && direccion != 'E' && direccion != 'O');
+        
         return direccion;
     }
 
     private static Juego crearJuego() throws JuegoException {
+    	
         int numJugadores;
 
         do {
-            System.out.println("Introduzca nÃºmero de jugadores entre "+ Const.MIN_JUGADORES +  "  y " + Const.MAX_JUGADORES);
+            System.out.println("Introduzca número de jugadores entre "+ Const.MIN_JUGADORES +  "  y " + Const.MAX_JUGADORES);
             numJugadores = Integer.parseInt(teclado.nextLine());
         } while (numJugadores < Const.MIN_JUGADORES || numJugadores > Const.MAX_JUGADORES);
 
@@ -70,6 +71,7 @@ public class MainJuego {
             juego.crearJugador(tipo);
 
         }
+        
         return juego;
     }
 
@@ -87,7 +89,6 @@ public class MainJuego {
                 System.out.println("Tipo incorrecto");
                 hayError = true;
             }
-
         } while (hayError);
 
         return tipo;
