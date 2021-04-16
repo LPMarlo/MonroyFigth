@@ -1,7 +1,5 @@
 package elementos;
 
-import java.util.Objects;
-
 public abstract class Jugador extends Elemento {
 
     //Objetos que puede recoger.
@@ -24,7 +22,8 @@ public abstract class Jugador extends Elemento {
         pociones = 0;
         dinero = 0;
     }
-
+    
+    //Se añade un objeto
     public void addGema() {
         gemas++;
     }
@@ -36,7 +35,8 @@ public abstract class Jugador extends Elemento {
     public void addDinero() {
         dinero++;
     }
-
+    
+    //Se elimina un objeto
     public void removeGema() {
         gemas--;
     }
@@ -44,11 +44,21 @@ public abstract class Jugador extends Elemento {
     public void removePocion() {
         pociones--;
     }
+    
+    //Jugador gana o pierde todo el dinero
+    public void winDinero(int dinero) {
+        this.dinero = dinero;
+    }
 
+    public void loseDinero (){
+        this.dinero = 0;
+    }
+    
     public int getGemas() {
         return gemas;
     }
-
+    
+    //GETTERS
     public int getVelocidad() {
         return velocidad;
     }
@@ -65,13 +75,6 @@ public abstract class Jugador extends Elemento {
         return dinero;
     }
 
-    public void winDinero(int dinero) {
-        this.dinero = dinero;
-    }
-
-    public void loseDinero (){
-        this.dinero = 0;
-    }
     public int getPociones() {
         return pociones;
     }

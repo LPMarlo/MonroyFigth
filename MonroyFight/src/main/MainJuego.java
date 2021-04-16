@@ -5,9 +5,12 @@ import java.util.Scanner;
 
 import logica.*;
 
-
+/**
+ * @link https://github.com/LPMarlo/MonroyFigth
+ * @author Marlo Lebrón Pareja
+ * @author Fco Javier Torrejón Aragón
+ */
 public class MainJuego {
-
 
     public static Scanner teclado = new Scanner(System.in);
 

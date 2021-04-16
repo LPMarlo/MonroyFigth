@@ -38,17 +38,18 @@ public class Juego {
     }
     
     /**
-     * Crea un jugador segun el tipo seleccionado y recibe un turno y posicion aleatoria.
+     * Crea un jugador segun el tipo seleccionado y se le asigna un turno y posicion aleatoria.
      * @param tipo
      */
     public void crearJugador(TipoJugador tipo) {
     	
+    	//VARIABLES
         Jugador jugador = null;
         int posicion = 0;
         boolean salir = false;
         int fila, columna;
 
-        //Primera posicion nula
+        //Calcular primera posicion nula en el array de jugadores
         for (int i = 0; i < jugadores.length && !salir; i++) {
 			if (jugadores[i]==null) {
 				posicion = i;
@@ -56,7 +57,7 @@ public class Juego {
 			}
 		}
 
-        //Fila y columna donde se añade el jugador en el tablero
+        //Fila y columna donde se añadirá el jugador en el tablero
         do {
             Random r1 = new Random();
             fila = r1.nextInt(alto);
@@ -106,8 +107,14 @@ public class Juego {
         return dado;
     }
     
+    /**
+     * Método que incluye los posibles casos donde se vaya a mover el jugador.
+     * @param direccion
+     * @return String con la información del movimiento
+     */
     public String moverJugador(char direccion) {
     	
+    	//VARIABLES
     	String info = null;
     	int nextFila = 0, nextColumna = 0;
         int filaActual = 0, columnaActual = 0;
@@ -115,6 +122,7 @@ public class Juego {
         boolean salir = false;
         boolean mover = false;
         
+        //Para mover a un jugador,  primero buscamos en que fila y columna se encuentra
         for (int i = 0; i < this.alto && !salir; i++) {
             for (int j = 0; j < this.ancho && !salir; j++) {
                 if (tablero[i][j]!=null && tablero[i][j]==jugadores[turnoJugador]) {
@@ -126,7 +134,7 @@ public class Juego {
                 }
             }
         }
-        
+        //Segun la direccion selecionada la columna o la fila una casilla
         if (direccion == ESTE) {
           if (nextColumna < this.ancho-1) nextColumna = nextColumna+1;
           else nextColumna = 0;
@@ -144,16 +152,19 @@ public class Juego {
             else nextFila = 0;
         }
         
+        //Bucle para calcular la posicion del posible jugador en el array de jugadores
         for (int i = 0; i < jugadores.length; i++) {
             if (jugadores[i]!=null && jugadores[i]==tablero[nextFila][nextColumna]) {
             	jugadorAAtacar = i;
 			}
         }
 
-        if (tablero[nextFila][nextColumna] == null) {
+        if (tablero[nextFila][nextColumna] == null) { //Si la nueva casilla está vacia, el jugador solo se mueve
             info = "Movimiento realizado.";
             mover = true;
         }
+        
+        //Si hay un objeto, se añade al jugador
         else if (tablero[nextFila][nextColumna] instanceof Gema) {
             jugadores[turnoJugador].addGema();
             info = "El jugador " + jugadores[turnoJugador].toString() + " ha obtenido 1 gema.";
@@ -169,8 +180,10 @@ public class Juego {
             info = "El jugador " + jugadores[turnoJugador].toString() + " ha obtenido 1 dinero.";
             mover = true;
         }
-        else if (tablero[nextFila][nextColumna] instanceof Roca) {
-            if (jugadores[turnoJugador].getGemas()>0) {
+        
+        //Si hay un obstaculo, se supera dependiendo de las condiciones
+        else if (tablero[nextFila][nextColumna] instanceof Roca) { 
+            if (jugadores[turnoJugador].getGemas()>0) { // En el caso de la roca, el jugador solo se puede mover si tiene al menos 1 gema
                 jugadores[turnoJugador].removeGema();
                 info = "El jugador " + jugadores[turnoJugador].toString() + " ha podido pasar sobre la roca.";
                 mover = true;
@@ -179,14 +192,15 @@ public class Juego {
                 info = "El jugador " + jugadores[turnoJugador].toString() + " no ha podido pasar sobre la roca.";
             }
         }
-        else if (tablero[nextFila][nextColumna] instanceof Pozo) {
+        else if (tablero[nextFila][nextColumna] instanceof Pozo) { 
+        	
             Random jr = new Random();
             int magiaJugador = jr.nextInt(jugadores[turnoJugador].getMagia())+1;
 
             Random pr = new Random();
             int magiaPozo = pr.nextInt(MAGIA_POZO)+1;
 
-            if (magiaJugador > magiaPozo) {
+            if (magiaJugador > magiaPozo) { // En el caso de pozo, solo se supera si aleatoriamente la magia del jugador supera a la del pozo
                 info = "El jugador " + jugadores[turnoJugador].toString() + " ha podido pasar sobre el pozo.";
                 mover = true;
             } else {
@@ -194,7 +208,7 @@ public class Juego {
             }
         }
 
-        //BATALLA
+        //ATAQUE
         else if(jugadores[jugadorAAtacar]==tablero[nextFila][nextColumna]) {
             Random a = new Random();
             int fa = a.nextInt(jugadores[turnoJugador].getFuerza())+1;
@@ -202,7 +216,7 @@ public class Juego {
             Random b = new Random();
             int fb = b.nextInt(jugadores[jugadorAAtacar].getFuerza())+1;
 
-            if (fa>fb) {
+            if (fa>fb) { //Caso en el que el jugador del turno gana
                 if (jugadores[jugadorAAtacar].getPociones()>0) {
                     jugadores[jugadorAAtacar].removePocion();
                     info = "El jugador " + tablero[nextFila][nextColumna].toString() + " ha utilizado una pocion.";
@@ -216,9 +230,9 @@ public class Juego {
                     info = "El jugador " + jugadores[jugadorAAtacar].toString() + " ha sido eliminado.";
                     jugadores[jugadorAAtacar] = null;
                     tablero[nextFila][nextColumna] = null;
-                    mover = true;
+                    mover = true; // Si el jugador del turno elimina al otro, se mueve
                 }
-            } else if (fb>fa) {
+            } else if (fb>fa) { //Caso en el que el jugador que recibe el ataque gana
                 if (jugadores[turnoJugador].getPociones()>0) {
                     ((Jugador) jugadores[turnoJugador]).removePocion();
                     info = "El jugador " + jugadores[turnoJugador].toString() + " ha utilizado una pocion.";
@@ -232,16 +246,19 @@ public class Juego {
                     info = "El jugador " + jugadores[turnoJugador].toString() + " ha sido eliminado.";
                     jugadores[turnoJugador] = null;
                     tablero[filaActual][columnaActual] = null;
-                    this.dead = true;
+                    this.dead = true; // Si el jugador que recibe el ataque elimina al del turno, no se mueve y muere el que ataca
                 }
             }
             else info = "Empate.";
         }
+        
+        //Una vez pasados los filtros, el jugador en turno se mueve
         if (mover) {
             tablero[nextFila][nextColumna] = jugadores[turnoJugador];
             tablero[filaActual][columnaActual] = null;
         }
         
+        //Casos en los que se termina el juego
         int jugadoresEnTablero = 0;
         for (int i = 0; i < jugadores.length; i++) {
 			if (jugadores[i]!=null) jugadoresEnTablero++;
@@ -354,6 +371,7 @@ public class Juego {
      * con la cantidad establecida en las constantes.
      */
     private void addObjetos() {
+    	
         //OBJETOS A AÑADIR
         Dinero dinero = new Dinero();
         Gema gema = new Gema();
@@ -427,7 +445,11 @@ public class Juego {
             }
         }
     }
-
+    
+    /**
+     * Se ordena los jugadores de forma aleatoria.
+     * @return nombre de los jugadores por orden de creación.
+     */
 	public String ordenJugadores() {
 		
 		StringBuilder sb = new StringBuilder();
