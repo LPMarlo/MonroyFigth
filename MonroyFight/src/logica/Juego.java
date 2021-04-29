@@ -201,10 +201,10 @@ public class Juego {
             int magiaPozo = pr.nextInt(MAGIA_POZO)+1;
 
             if (magiaJugador > magiaPozo) { // En el caso de pozo, solo se supera si aleatoriamente la magia del jugador supera a la del pozo
-                info = "El jugador " + jugadores[turnoJugador].toString() + " ha podido pasar sobre el pozo.";
+                info = "El jugador " + jugadores[turnoJugador].toString() + " ha podido pasar sobre el pozo. Magia jugador: " + magiaJugador + ", Magia pozo: " + magiaPozo;
                 mover = true;
             } else {
-                info = "El jugador " + jugadores[turnoJugador].toString() + " no ha podido pasar sobre el pozo.";
+                info = "El jugador " + jugadores[turnoJugador].toString() + " no ha podido pasar sobre el pozo. Magia jugador: " + magiaJugador + ", Magia pozo: " + magiaPozo;
             }
         }
 
@@ -223,11 +223,11 @@ public class Juego {
                 }
                 else if (jugadores[jugadorAAtacar].getDinero()>0) {
                     jugadores[turnoJugador].winDinero(jugadores[jugadorAAtacar].getDinero());
+                    info = "El jugador " + jugadores[jugadorAAtacar].toString() + " ha perdido todo su dinero. Dinero: " + jugadores[jugadorAAtacar].getDinero();
                     jugadores[jugadorAAtacar].loseDinero();
-                    info = "El jugador " + jugadores[jugadorAAtacar].toString() + " ha perdido todo su dinero.";
                 }
                 else {
-                    info = "El jugador " + jugadores[jugadorAAtacar].toString() + " ha sido eliminado.";
+                    info = "El jugador " + jugadores[jugadorAAtacar].toString() + " ha sido eliminado. La fuerza del jugador que ataca es " + fa + " y del jugador atacado es " + fb + ".";
                     jugadores[jugadorAAtacar] = null;
                     tablero[nextFila][nextColumna] = null;
                     mover = true; // Si el jugador del turno elimina al otro, se mueve
@@ -239,17 +239,17 @@ public class Juego {
                 }
                 else if (jugadores[jugadorAAtacar].getDinero()>0) {
                     jugadores[jugadorAAtacar].winDinero(((Jugador) jugadores[turnoJugador]).getDinero());
-                    ((Jugador) jugadores[turnoJugador]).loseDinero();
-                    info = "El jugador " + jugadores[turnoJugador].toString() + " ha perdido todo su dinero.";
+                    info = "El jugador " + jugadores[turnoJugador].toString() + " ha perdido todo su dinero. Dinero: " + jugadores[jugadorAAtacar].getDinero();
+                    jugadores[turnoJugador].loseDinero();
                 }
                 else {
-                    info = "El jugador " + jugadores[turnoJugador].toString() + " ha sido eliminado.";
+                    info = "El jugador " + jugadores[turnoJugador].toString() + " ha sido eliminado. La fuerza del jugador que ataca es " + fa + " y del jugador atacado es " + fb + ".";
                     jugadores[turnoJugador] = null;
                     tablero[filaActual][columnaActual] = null;
                     this.dead = true; // Si el jugador que recibe el ataque elimina al del turno, no se mueve y muere el que ataca
                 }
             }
-            else info = "Empate.";
+            else info = "Empate. La fuerza del jugador que ataca es " + fa + " y del jugador atacado es " + fb +".";
         }
         
         //Una vez pasados los filtros, el jugador en turno se mueve
